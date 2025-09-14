@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTech Pro - Comprehensive Cattle Management Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary-color: #059669;
+            --accent-color: #f59e0b;
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --warning-color: #d97706;
+            --info-color: #3b82f6;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .app-header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--secondary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            background: var(--gray-100);
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            background: white;
+            color: var(--gray-600);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-banner.danger {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border-color: var(--danger-color);
+        }
+
+        .alert-banner.success {
+            background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+            border-color: var(--success-color);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .metric-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+
+        .metric-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .metric-change.positive {
+            color: var(--success-color);
+        }
+
+        .metric-change.negative {
+            color: var(--danger-color);
+        }
+
+        /* Main Dashboard Layout */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .form-text {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        /* Animal Cards */
+        .animal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .animal-card.high-risk {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .animal-card.medium-risk {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .animal-card.low-risk {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .animal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .animal-id {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .risk-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .risk-badge.high {
+            background: #fef2f2;
+            color: var(--danger-color);
+        }
+
+        .risk-badge.medium {
+            background: #fffbeb;
+            color: var(--warning-color);
+        }
+
+        .risk-badge.low {
+            background: #f0fdf4;
+            color: var(--success-color);
+        }
+
+        .animal-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .animal-stat {
+            text-align: center;
+        }
+
+        .animal-stat-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .animal-stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1rem 0;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-indicator.healthy {
+            background: #f0fdf4;
+            color: var(--success-color);
+        }
+
+        .status-indicator.warning {
+            background: #fffbeb;
+            color: var(--warning-color);
+        }
+
+        .status-indicator.danger {
+            background: #fef2f2;
+            color: var(--danger-color);
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .animal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading states */
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-200);
+            z-index: 1000;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .notification-body {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <a href="#" class="logo" onclick="showSection('dashboard')">
+                    <i class="fas fa-cow"></i>
+                    <span id="app-title">AgriTech Pro</span>
+                </a>
+                
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="#" class="nav-link active" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> <span id="nav-dashboard">Dashboard</span></a></li>
+                        <li><a href="#" class="nav-link" onclick="showSection('animals')"><i class="fas fa-cow"></i> <span id="nav-animals">Animals</span></a></li>
+                        <li><a href="#" class="nav-link" onclick="showSection('predictions')"><i class="fas fa-chart-line"></i> <span id="nav-predictions">Predictions</span></a></li>
+                        <li><a href="#" class="nav-link" onclick="showSection('health')"><i class="fas fa-heartbeat"></i> <span id="nav-health">Health</span></a></li>
+                        <li><a href="#" class="nav-link" onclick="showSection('reports')"><i class="fas fa-file-alt"></i> <span id="nav-reports">Reports</span></a></li>
+                    </ul>
+                </nav>
+                
+                <div class="language-selector">
+                    <button class="lang-btn active" onclick="switchLanguage('en')"><i class="fas fa-globe"></i> EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('gu')"><i class="fas fa-globe"></i> ગુ</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Alert Banner -->
+            <div id="alertBanner" class="alert-banner hidden">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong id="alertTitle">Health Alert</strong>
+                    <div id="alertMessage">High risk detected for 3 animals</div>
+                </div>
+                <button class="btn btn-sm btn-warning" onclick="dismissAlert()">View Details</button>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard-section">
+                <!-- Key Metrics -->
+                <div class="dashboard-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title" id="metric-today-yield">Today's Milk Yield</span>
+                            <div class="metric-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;">
+                                <i class="fas fa-milk"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">1,247 L</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +5.2% from yesterday
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title" id="metric-health-score">Average Health Score</span>
+                            <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">8.7/10</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +0.3 from last week
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title" id="metric-high-risk">High Risk Alerts</span>
+                            <div class="metric-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">3</div>
+                        <div class="metric-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            -1 from yesterday
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title" id="metric-active-animals">Active Animals</span>
+                            <div class="metric-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">
+                                <i class="fas fa-cow"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">47</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            +2 this month
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Dashboard Layout -->
+                <div class="dashboard-layout">
+                    <!-- Left Sidebar - Data Input -->
+                    <div class="sidebar">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span id="quick-add-title">Quick Add Data</span>
+                                </h3>
+                            </div>
+                            <form id="quickDataForm">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-tag"></i>
+                                        <span id="animal-id-label">Animal ID</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="quickAnimalId" placeholder="COW001" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <i class="fas fa-thermometer-half"></i>
+                                            <span id="temp-label">Temperature</span>
+                                        </label>
+                                        <input type="number" class="form-control" id="quickTemp" step="0.1" min="35" max="42" value="38.5">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <i class="fas fa-milk"></i>
+                                            <span id="milk-yield-label">Milk Yield</span>
+                                        </label>
+                                        <input type="number" class="form-control" id="quickMilk" step="0.1" min="0" max="50" value="18.5">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-seedling"></i>
+                                        <span id="feed-label">Feed (kg)</span>
+                                    </label>
+                                    <input type="number" class="form-control" id="quickFeed" step="0.1" min="0" max="30" value="12.0">
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                    <i class="fas fa-save"></i>
+                                    <span id="save-data-btn">Save Data</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-upload"></i>
+                                    <span id="batch-upload-title">Batch Upload</span>
+                                </h3>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" class="form-control" id="batchFile" accept=".csv,.xlsx">
+                                <div class="form-text" id="upload-help">Upload CSV or Excel file with animal data</div>
+                            </div>
+                            <button class="btn btn-success" style="width: 100%;" onclick="uploadBatch()">
+                                <i class="fas fa-upload"></i>
+                                <span id="upload-btn">Upload File</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main Panel - Animal Cards -->
+                    <div class="main-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-cow"></i>
+                                    <span id="animals-overview-title">Animals Overview</span>
+                                </h3>
+                                <div class="card-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="refreshAnimals()">
+                                        <i class="fas fa-sync-alt"></i>
+                                        <span id="refresh-btn">Refresh</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-success" onclick="showSection('animals')">
+                                        <i class="fas fa-eye"></i>
+                                        <span id="view-all-btn">View All</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="animal-grid" id="animalGrid">
+                                <!-- Animal cards will be populated here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span id="milk-trends-title">Milk Yield Trends</span>
+                                </h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="milkTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel - Alerts & Recommendations -->
+                    <div class="right-panel">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span id="alerts-title">Health Alerts</span>
+                                </h3>
+                            </div>
+                            <div id="alertsList">
+                                <!-- Alerts will be populated here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span id="recommendations-title">Recommendations</span>
+                                </h3>
+                            </div>
+                            <div id="recommendationsList">
+                                <!-- Recommendations will be populated here -->
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-download"></i>
+                                    <span id="quick-export-title">Quick Export</span>
+                                </h3>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-primary" onclick="exportReport('csv')">
+                                    <i class="fas fa-file-csv"></i>
+                                    <span id="export-csv-btn">Export CSV</span>
+                                </button>
+                                <button class="btn btn-sm btn-success" onclick="exportReport('excel')">
+                                    <i class="fas fa-file-excel"></i>
+                                    <span id="export-excel-btn">Export Excel</span>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="exportReport('pdf')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span id="export-pdf-btn">Export PDF</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other sections will be added here -->
+            <div id="animals-section" class="hidden">
+                <!-- Animals management section -->
+            </div>
+
+            <div id="predictions-section" class="hidden">
+                <!-- Predictions section -->
+            </div>
+
+            <div id="health-section" class="hidden">
+                <!-- Health monitoring section -->
+            </div>
+
+            <div id="reports-section" class="hidden">
+                <!-- Reports section -->
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data
+        const sampleAnimals = [
+            { id: 'COW001', breed: 'Holstein', age: 4, milkYield: 18.5, temperature: 38.5, risk: 'low', status: 'healthy' },
+            { id: 'COW002', breed: 'Jersey', age: 3, milkYield: 15.2, temperature: 39.1, risk: 'medium', status: 'warning' },
+            { id: 'COW003', breed: 'Holstein', age: 5, milkYield: 12.8, temperature: 40.2, risk: 'high', status: 'danger' },
+            { id: 'COW004', breed: 'Guernsey', age: 2, milkYield: 16.7, temperature: 38.2, risk: 'low', status: 'healthy' },
+            { id: 'COW005', breed: 'Holstein', age: 6, milkYield: 14.3, temperature: 39.5, risk: 'medium', status: 'warning' },
+            { id: 'COW006', breed: 'Jersey', age: 4, milkYield: 17.9, temperature: 38.8, risk: 'low', status: 'healthy' }
+        ];
+
+        const sampleAlerts = [
+            { type: 'high', message: 'COW003: High temperature detected (40.2°C)', time: '2 hours ago' },
+            { type: 'medium', message: 'COW002: Milk yield below average', time: '4 hours ago' },
+            { type: 'high', message: 'COW005: Potential mastitis risk', time: '6 hours ago' }
+        ];
+
+        const sampleRecommendations = [
+            'Schedule veterinary check for COW003',
+            'Increase monitoring frequency for COW002',
+            'Isolate COW005 and check for clinical signs',
+            'Review feed quality for all animals'
+        ];
+
+        // Language translations
+        const translations = {
+            en: {
+                'app-title': 'AgriTech Pro',
+                'nav-dashboard': 'Dashboard',
+                'nav-animals': 'Animals',
+                'nav-predictions': 'Predictions',
+                'nav-health': 'Health',
+                'nav-reports': 'Reports',
+                'metric-today-yield': "Today's Milk Yield",
+                'metric-health-score': 'Average Health Score',
+                'metric-high-risk': 'High Risk Alerts',
+                'metric-active-animals': 'Active Animals',
+                'quick-add-title': 'Quick Add Data',
+                'animal-id-label': 'Animal ID',
+                'temp-label': 'Temperature',
+                'milk-yield-label': 'Milk Yield',
+                'feed-label': 'Feed (kg)',
+                'save-data-btn': 'Save Data',
+                'batch-upload-title': 'Batch Upload',
+                'upload-help': 'Upload CSV or Excel file with animal data',
+                'upload-btn': 'Upload File',
+                'animals-overview-title': 'Animals Overview',
+                'refresh-btn': 'Refresh',
+                'view-all-btn': 'View All',
+                'milk-trends-title': 'Milk Yield Trends',
+                'alerts-title': 'Health Alerts',
+                'recommendations-title': 'Recommendations',
+                'quick-export-title': 'Quick Export',
+                'export-csv-btn': 'Export CSV',
+                'export-excel-btn': 'Export Excel',
+                'export-pdf-btn': 'Export PDF'
+            },
+            gu: {
+                'app-title': 'એગ્રીટેક પ્રો',
+                'nav-dashboard': 'ડેશબોર્ડ',
+                'nav-animals': 'પશુઓ',
+                'nav-predictions': 'આગાહીઓ',
+                'nav-health': 'આરોગ્ય',
+                'nav-reports': 'રિપોર્ટ',
+                'metric-today-yield': 'આજનું દૂધ ઉત્પાદન',
+                'metric-health-score': 'સરેરાશ આરોગ્ય સ્કોર',
+                'metric-high-risk': 'ઉચ્ચ જોખમ ચેતવણીઓ',
+                'metric-active-animals': 'સક્રિય પશુઓ',
+                'quick-add-title': 'ઝડપી ડેટા ઉમેરો',
+                'animal-id-label': 'પશુ ID',
+                'temp-label': 'તાપમાન',
+                'milk-yield-label': 'દૂધ ઉત્પાદન',
+                'feed-label': 'ખોરાક (કિલો)',
+                'save-data-btn': 'ડેટા સેવ કરો',
+                'batch-upload-title': 'બેચ અપલોડ',
+                'upload-help': 'પશુ ડેટા સાથે CSV અથવા Excel ફાઇલ અપલોડ કરો',
+                'upload-btn': 'ફાઇલ અપલોડ કરો',
+                'animals-overview-title': 'પશુઓનો ઓવરવ્યુ',
+                'refresh-btn': 'રિફ્રેશ',
+                'view-all-btn': 'બધા જુઓ',
+                'milk-trends-title': 'દૂધ ઉત્પાદન ટ્રેન્ડ',
+                'alerts-title': 'આરોગ્ય ચેતવણીઓ',
+                'recommendations-title': 'સૂચનો',
+                'quick-export-title': 'ઝડપી નિકાસ',
+                'export-csv-btn': 'CSV નિકાસ',
+                'export-excel-btn': 'Excel નિકાસ',
+                'export-pdf-btn': 'PDF નિકાસ'
+            }
+        };
+
+        let currentLanguage = 'en';
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            updateLanguage();
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[id]');
+            elements.forEach(element => {
+                const key = element.id;
+                if (translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('[id$="-section"]').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function createAnimalCard(animal) {
+            const riskClass = animal.risk === 'high' ? 'high-risk' : animal.risk === 'medium' ? 'medium-risk' : 'low-risk';
+            const statusClass = animal.status === 'danger' ? 'danger' : animal.status === 'warning' ? 'warning' : 'healthy';
+            
+            return `
+                <div class="animal-card ${riskClass}">
+                    <div class="animal-header">
+                        <span class="animal-id">${animal.id}</span>
+                        <span class="risk-badge ${animal.risk}">${animal.risk.toUpperCase()}</span>
+                    </div>
+                    <div class="animal-stats">
+                        <div class="animal-stat">
+                            <div class="animal-stat-value">${animal.milkYield}L</div>
+                            <div class="animal-stat-label">Milk Yield</div>
+                        </div>
+                        <div class="animal-stat">
+                            <div class="animal-stat-value">${animal.temperature}°C</div>
+                            <div class="animal-stat-label">Temperature</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 0.75rem;">
+                        <span class="status-indicator ${statusClass}">
+                            <i class="fas fa-circle"></i>
+                            ${animal.status.charAt(0).toUpperCase() + animal.status.slice(1)}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function populateAnimalGrid() {
+            const animalGrid = document.getElementById('animalGrid');
+            animalGrid.innerHTML = sampleAnimals.map(createAnimalCard).join('');
+        }
+
+        function populateAlerts() {
+            const alertsList = document.getElementById('alertsList');
+            alertsList.innerHTML = sampleAlerts.map(alert => `
+                <div class="alert-banner ${alert.type === 'high' ? 'danger' : 'warning'}" style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <div style="font-size: 0.875rem;">${alert.message}</div>
+                        <div style="font-size: 0.75rem; opacity: 0.8;">${alert.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function populateRecommendations() {
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = sampleRecommendations.map(rec => `
+                <div style="padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+                    <i class="fas fa-lightbulb" style="color: var(--accent-color); margin-right: 0.5rem;"></i>
+                    ${rec}
+                </div>
+            `).join('');
+        }
+
+        function createMilkTrendChart() {
+            const ctx = document.getElementById('milkTrendChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Milk Yield (L)',
+                        data: [1200, 1250, 1180, 1300, 1280, 1150, 1247],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function showAlert(title, message, type = 'warning') {
+            const alertBanner = document.getElementById('alertBanner');
+            const alertTitle = document.getElementById('alertTitle');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+            alertBanner.className = `alert-banner ${type}`;
+            alertBanner.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alertBanner.classList.add('hidden');
+            }, 5000);
+        }
+
+        function dismissAlert() {
+            document.getElementById('alertBanner').classList.add('hidden');
+        }
+
+        function refreshAnimals() {
+            showAlert('Refreshed', 'Animal data has been refreshed', 'success');
+            populateAnimalGrid();
+        }
+
+        function uploadBatch() {
+            const file = document.getElementById('batchFile').files[0];
+            if (file) {
+                showAlert('Upload Started', 'Processing batch file...', 'info');
+                // Simulate upload
+                setTimeout(() => {
+                    showAlert('Upload Complete', 'Batch data has been processed successfully', 'success');
+                }, 2000);
+            } else {
+                showAlert('No File', 'Please select a file to upload', 'warning');
+            }
+        }
+
+        function exportReport(format) {
+            showAlert('Export Started', `Generating ${format.toUpperCase()} report...`, 'info');
+            // Simulate export
+            setTimeout(() => {
+                showAlert('Export Complete', `${format.toUpperCase()} report has been generated`, 'success');
+            }, 2000);
+        }
+
+        // Quick data form submission
+        document.getElementById('quickDataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const animalId = document.getElementById('quickAnimalId').value;
+            const temp = document.getElementById('quickTemp').value;
+            const milk = document.getElementById('quickMilk').value;
+            const feed = document.getElementById('quickFeed').value;
+            
+            // Simulate data saving
+            showAlert('Data Saved', `Data for ${animalId} has been saved successfully`, 'success');
+            
+            // Reset form
+            this.reset();
+            document.getElementById('quickTemp').value = '38.5';
+            document.getElementById('quickMilk').value = '18.5';
+            document.getElementById('quickFeed').value = '12.0';
+        });
+
+        // Initialize
+        updateLanguage();
+        populateAnimalGrid();
+        populateAlerts();
+        populateRecommendations();
+        createMilkTrendChart();
+        
+        // Show initial alert
+        setTimeout(() => {
+            showAlert('Health Alert', 'High risk detected for 3 animals', 'danger');
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTech Pro - AI Health Advisor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e40af;
+            --primary-dark: #1e3a8a;
+            --secondary-color: #059669;
+            --accent-color: #f59e0b;
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --warning-color: #d97706;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: none;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .alert {
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border-color: var(--danger-color);
+            color: #991b1b;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fffbeb, #fde68a);
+            border-color: var(--warning-color);
+            color: #92400e;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+            border-color: var(--success-color);
+            color: #166534;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #eff6ff, #bfdbfe);
+            border-color: var(--primary-color);
+            color: #1e3a8a;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #b45309;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .health-advisor {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .advisor-header {
+            background: linear-gradient(135deg, var(--secondary-color), #10b981);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .advisor-content {
+            padding: 2rem;
+        }
+
+        .symptom-input {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .symptom-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .recommendation-card {
+            background: var(--gray-50);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .recommendation-card.emergency {
+            border-left-color: var(--danger-color);
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+        }
+
+        .recommendation-card.urgent {
+            border-left-color: var(--warning-color);
+            background: linear-gradient(135deg, #fffbeb, #fde68a);
+        }
+
+        .recommendation-card.routine {
+            border-left-color: var(--success-color);
+            background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-emergency {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .priority-urgent {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .priority-routine {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .contact-emergency {
+            background: linear-gradient(135deg, var(--danger-color), #b91c1c);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .chat-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            margin-bottom: 1rem;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .chat-message.user {
+            background: var(--primary-color);
+            color: white;
+            margin-left: 2rem;
+            text-align: right;
+        }
+
+        .chat-message.ai {
+            background: white;
+            border: 1px solid var(--gray-200);
+            margin-right: 2rem;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 0.5rem;
+            margin-right: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .typing-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background: var(--gray-400);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 0 0.5rem;
+            }
+
+            .card-body, .advisor-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <!-- Disease Detection Results -->
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-heartbeat"></i> Disease Detection Results - COW001</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    <div>
+                        <h5 class="mb-2">High Risk Detected</h5>
+                        <p class="mb-2">Risk Probability: 85.3%</p>
+                        <p class="mb-0">Temperature: 40.2°C | Previous Mastitis: Yes | Months After Birth: 2</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-stethoscope"></i> Detected Issues:</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="fas fa-thermometer-three-quarters text-danger me-2"></i>
+                                Elevated body temperature (40.2°C)
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="fas fa-history text-warning me-2"></i>
+                                Previous mastitis history
+                            </li>
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="fas fa-calendar-alt text-info me-2"></i>
+                                Early lactation period (high risk)
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-clipboard-list"></i> Immediate Actions Required:</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-danger" onclick="getAIConsultation()">
+                                <i class="fas fa-robot"></i> Get AI Veterinary Consultation
+                            </button>
+                            <button class="btn btn-warning" onclick="showEmergencyContacts()">
+                                <i class="fas fa-phone"></i> Contact Emergency Vet
+                            </button>
+                            <button class="btn btn-success" onclick="generateHealthReport()">
+                                <i class="fas fa-file-medical"></i> Generate Health Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Health Advisor -->
+        <div class="health-advisor" id="aiAdvisor" style="display: none;">
+            <div class="advisor-header">
+                <h4><i class="fas fa-robot"></i> AI Veterinary Consultant</h4>
+                <p class="mb-0">Powered by Advanced AI - Get instant expert advice</p>
+            </div>
+            <div class="advisor-content">
+                <div class="chat-container" id="chatContainer">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>AI Consultant Ready</strong><br>
+                            I'm analyzing your cow's health data. Please describe any additional symptoms you've observed.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <textarea 
+                            class="form-control symptom-input" 
+                            id="symptomInput" 
+                            rows="3" 
+                            placeholder="Describe any additional symptoms (e.g., reduced appetite, lethargy, milk changes, udder swelling, etc.)"
+                        ></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary w-100 mb-2" onclick="consultAI()" id="consultBtn">
+                            <i class="fas fa-comments"></i> Consult AI
+                        </button>
+                        <button class="btn btn-success w-100" onclick="getEmergencyProtocol()">
+                            <i class="fas fa-first-aid"></i> Emergency Protocol
+                        </button>
+                    </div>
+                </div>
+
+                <div id="recommendations" class="mt-4" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Emergency Contacts -->
+        <div class="card mt-4" id="emergencyContacts" style="display: none;">
+            <div class="card-header bg-danger text-white">
+                <h5><i class="fas fa-phone-alt"></i> Emergency Veterinary Contacts</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-user-md fa-2x text-primary mb-2"></i>
+                            <h6>Dr. Patel Veterinary Clinic</h6>
+                            <p class="mb-1"><i class="fas fa-phone"></i> +91-9876543210</p>
+                            <p class="mb-1"><i class="fas fa-clock"></i> 24/7 Emergency</p>
+                            <button class="btn btn-sm btn-primary">Call Now</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-hospital fa-2x text-success mb-2"></i>
+                            <h6>Gujarat Animal Hospital</h6>
+                            <p class="mb-1"><i class="fas fa-phone"></i> +91-9123456789</p>
+                            <p class="mb-1"><i class="fas fa-clock"></i> Emergency: 24/7</p>
+                            <button class="btn btn-sm btn-success">Call Now</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-ambulance fa-2x text-warning mb-2"></i>
+                            <h6>Mobile Vet Service</h6>
+                            <p class="mb-1"><i class="fas fa-phone"></i> +91-8765432109</p>
+                            <p class="mb-1"><i class="fas fa-clock"></i> On-site visits</p>
+                            <button class="btn btn-sm btn-warning">Book Visit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - Replace with your actual API keys
+        const AI_CONFIG = {
+            // Option 1: OpenAI GPT
+            openai: {
+                apiKey: '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', // Replace with your OpenAI API key
+                model: 'gpt-3.5-turbo',
+                endpoint: 'https://api.openai.com/v1/chat/completions'
+            },
+            
+            // Option 2: Google Gemini
+            gemini: {
+                apiKey: 'AIzaSyAPCXSyKZ4O4Br0TF5ZRyyi39YvsHkZH20', // Replace with your Gemini API key
+                model: 'gemini-pro',
+                endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent'
+            },
+            
+            // Current provider
+            provider: 'gemini' // Change to 'openai' or 'gemini' when you have API keys
+        };
+
+        // Mock AI responses for demo (remove when using real APIs)
+        const mockResponses = {
+            consultation: {
+                emergency: `🚨 **EMERGENCY ASSESSMENT - COW001**
+
+**IMMEDIATE CONCERNS:**
+- Body temperature 40.2°C indicates severe hyperthermia
+- Previous mastitis + high risk factors suggest acute mastitis recurrence
+- Early lactation period increases infection susceptibility
+
+**CRITICAL ACTIONS (Next 2 Hours):**
+1. **Isolate the animal immediately** - prevent herd contamination
+2. **Cool the cow** - cold water, fans, shade
+3. **Contact veterinarian NOW** - this requires immediate professional attention
+4. **Milk sample collection** - for bacterial culture if possible
+5. **Monitor vital signs** every 30 minutes
+
+**EMERGENCY TREATMENT PROTOCOL:**
+- Anti-inflammatory medication (consult vet for dosage)
+- Broad-spectrum antibiotics may be needed
+- Fluid therapy to prevent dehydration
+- Pain management
+
+**RED FLAGS - Call vet immediately if you see:**
+- Temperature >41°C
+- Cow down/unable to stand
+- Rapid breathing or distress
+- Hot, swollen, or hard udder
+- Bloody or chunky milk
+
+**Risk Level: CRITICAL** 🔴
+*Time is critical - every hour matters in mastitis cases*`,
+
+                symptoms: `Based on the symptoms you've described and the cow's current condition, here's my assessment:
+
+**DIAGNOSIS PROBABILITY:**
+- Acute Clinical Mastitis: 85%
+- Systemic infection: 70%
+- Heat stress contribution: 40%
+
+**TARGETED RECOMMENDATIONS:**
+
+**IMMEDIATE (Next 1-2 hours):**
+1. **Strip affected quarters** - check milk appearance
+2. **Apply cold compresses** to udder if hot/swollen
+3. **Administer anti-inflammatory** if available (aspirin: 240-480 grains)
+4. **Increase water access** - dehydration risk high
+
+**SHORT-TERM (6-24 hours):**
+1. **Antibiotic therapy** - requires veterinary prescription
+2. **Supportive care** - comfortable, clean environment
+3. **Monitor milk production** and quality
+4. **Track temperature** every 4 hours
+
+**PREVENTION FOR HERD:**
+1. **Teat dipping** protocol review
+2. **Milking hygiene** assessment
+3. **Environmental cleanliness** check
+
+Would you like specific guidance on any of these points?`
+            }
+        };
+
+        let chatHistory = [];
+
+        function getAIConsultation() {
+            document.getElementById('aiAdvisor').style.display = 'block';
+            document.getElementById('aiAdvisor').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showEmergencyContacts() {
+            document.getElementById('emergencyContacts').style.display = 'block';
+            document.getElementById('emergencyContacts').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function consultAI() {
+            const symptomInput = document.getElementById('symptomInput');
+            const symptoms = symptomInput.value.trim();
+            
+            if (!symptoms) {
+                alert('Please describe the symptoms first');
+                return;
+            }
+
+            const consultBtn = document.getElementById('consultBtn');
+            const originalText = consultBtn.innerHTML;
+            consultBtn.innerHTML = '<span class="loading"></span> Consulting AI...';
+            consultBtn.disabled = true;
+
+            // Add user message to chat
+            addChatMessage(symptoms, 'user');
+            
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                let response;
+                
+                if (AI_CONFIG.provider === 'openai') {
+                    response = await consultOpenAI(symptoms);
+                } else if (AI_CONFIG.provider === 'gemini') {
+                    response = await consultGemini(symptoms);
+                } else {
+                    // Mock response for demo
+                    response = await mockAIConsultation(symptoms);
+                }
+
+                hideTypingIndicator();
+                addChatMessage(response, 'ai');
+                generateRecommendations(response);
+                
+            } catch (error) {
+                hideTypingIndicator();
+                addChatMessage('Sorry, I encountered an error. Please try again or contact a veterinarian immediately.', 'ai');
+                console.error('AI consultation error:', error);
+            }
+
+            consultBtn.innerHTML = originalText;
+            consultBtn.disabled = false;
+            symptomInput.value = '';
+        }
+
+        async function consultOpenAI(symptoms) {
+            const prompt = `You are a veterinary AI consultant. A cow (COW001) has been detected with high disease risk:
+            
+            Current Status:
+            - Body Temperature: 40.2°C (elevated)
+            - Previous mastitis history: Yes
+            - Months after birth: 2 (early lactation)
+            - Risk probability: 85.3%
+            
+            Additional symptoms reported by farmer: "${symptoms}"
+            
+            Please provide:
+            1. Immediate assessment and diagnosis probability
+            2. Critical actions needed in next 2 hours
+            3. Treatment recommendations
+            4. Warning signs to watch for
+            5. When to call emergency vet
+            
+            Be specific, practical, and emphasize safety. Use clear formatting with bullet points and priorities.`;
+
+            const response = await fetch(AI_CONFIG.openai.endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${AI_CONFIG.openai.apiKey}`
+                },
+                body: JSON.stringify({
+                    model: AI_CONFIG.openai.model,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are an expert veterinary consultant specializing in cattle health. Provide practical, actionable advice for farmers.'
+                        },
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    max_tokens: 1000,
+                    temperature: 0.3
+                })
+            });
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        async function consultGemini(symptoms) {
+            const prompt = `You are a veterinary AI consultant. A cow (COW001) has high disease risk:
+            
+            Status: Temperature 40.2°C, previous mastitis, 2 months post-calving, 85.3% risk
+            Symptoms: "${symptoms}"
+            
+            Provide immediate assessment, critical actions, treatment recommendations, and emergency indicators. Be specific and practical.`;
+
+            const response = await fetch(`${AI_CONFIG.gemini.endpoint}?key=${AI_CONFIG.gemini.apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.3,
+                        maxOutputTokens: 1000
+                    }
+                })
+            });
+
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        async function mockAIConsultation(symptoms) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Return appropriate mock response based on symptoms
+            if (symptoms.toLowerCase().includes('swollen') || symptoms.toLowerCase().includes('hot') || symptoms.toLowerCase().includes('milk')) {
+                return mockResponses.consultation.emergency;
+            } else {
+                return mockResponses.consultation.symptoms;
+            }
+        }
+
+        function addChatMessage(message, sender) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+            
+            if (sender === 'ai') {
+                // Convert markdown-style formatting to HTML
+                message = message
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/🚨/g, '<i class="fas fa-exclamation-triangle text-danger"></i>')
+                    .replace(/🔴/g, '<i class="fas fa-circle text-danger"></i>')
+                    .replace(/(\d+\..*?)(?=\n|$)/g, '<div class="mb-1">$1</div>')
+                    .replace(/\n/g, '<br>');
+            }
+            
+            messageDiv.innerHTML = message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatContainer = document.getElementById('chatContainer');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <i class="fas fa-robot text-primary"></i>
+                <span>AI is thinking</span>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function generateRecommendations(aiResponse) {
+            const recommendationsDiv = document.getElementById('recommendations');
+            
+            // Parse AI response to extract actionable recommendations
+            const recommendations = [
+                {
+                    priority: 'emergency',
+                    title: 'Immediate Isolation',
+                    description: 'Separate COW001 from the herd immediately to prevent disease spread',
+                    action: 'Move to isolation pen within 30 minutes'
+                },
+                {
+                    priority: 'urgent',
+                    title: 'Temperature Management',
+                    description: 'Reduce body temperature using cooling methods',
+                    action: 'Apply cold water, provide shade and ventilation'
+                },
+                {
+                    priority: 'urgent',
+                    title: 'Veterinary Contact',
+                    description: 'Contact emergency veterinarian for immediate consultation',
+                    action: 'Call within 2 hours - this case requires professional attention'
+                },
+                {
+                    priority: 'routine',
+                    title: 'Monitoring Protocol',
+                    description: 'Establish regular health monitoring schedule',
+                    action: 'Check temperature every 2 hours, monitor milk quality'
+                }
+            ];
+
+            let html = '<h6><i class="fas fa-tasks"></i> Action Plan Generated by AI:</h6>';
+            
+            recommendations.forEach((rec, index) => {
+                html += `
+                    <div class="recommendation-card ${rec.priority}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">${index + 1}. ${rec.title}</h6>
+                            <span class="priority-badge priority-${rec.priority}">${rec.priority}</span>
+                        </div>
+                        <p class="mb-2">${rec.description}</p>
+                        <small class="text-muted"><strong>Action:</strong> ${rec.action}</small>
+                    </div>
+                `;
+            });
+
+            recommendationsDiv.innerHTML = html;
+            recommendationsDiv.style.display = 'block';
+        }
+
+        async function getEmergencyProtocol() {
+            const consultBtn = document.getElementById('consultBtn');
+            consultBtn.innerHTML = '<span class="loading"></span> Loading Protocol...';
+            consultBtn.disabled = true;
+
+            showTypingIndicator();
+
+            // Simulate loading emergency protocol
+            setTimeout(() => {
+                hideTypingIndicator();
+                const emergencyProtocol = `🚨 **EMERGENCY PROTOCOL ACTIVATED - COW001**
+
+**CRITICAL TIMELINE:**
+
+**NEXT 30 MINUTES:**
+1. **ISOLATE** - Move cow to clean, separate area
+2. **COOL DOWN** - Cold water on legs/neck, fan if available
+3. **CHECK UDDER** - Look for heat, swelling, hardness
+4. **COLLECT MILK SAMPLE** - Save for testing
+
+**NEXT 2 HOURS:**
+1. **CALL VETERINARIAN** - This is not optional
+2. **MONITOR VITALS** - Temperature every 30 min
+3. **PROVIDE WATER** - Fresh, clean water access
+4. **NO MILKING** from affected quarters
+
+**RED FLAG SYMPTOMS - CALL VET IMMEDIATELY:**
+- Temperature above 41°C (106°F)
+- Cow goes down/can't stand
+- Rapid, labored breathing
+- Dark red or bloody milk
+- Severe udder swelling
+
+**EMERGENCY KIT ITEMS TO HAVE READY:**
+- Digital thermometer
+- Clean towels
+- Sterile sample containers
+- Anti-inflammatory (if vet approved)
+- Contact numbers
+
+**DO NOT:**
+- Give antibiotics without vet guidance
+- Milk affected quarters
+- Apply heat to swollen udder
+- Wait "to see if it gets better"
+
+**PREVENTION FOR HERD:**
+- Increase milking hygiene immediately
+- Check all other cows for early signs
+- Review recent feed/water changes
+
+Time is critical. Every hour of delay increases risk of permanent damage or death.`;
+                
+                addChatMessage(emergencyProtocol, 'ai');
+                consultBtn.innerHTML = '<i class="fas fa-comments"></i> Consult AI';
+                consultBtn.disabled = false;
+            }, 2000);
+        }
+
+        function generateHealthReport() {
+            const reportWindow = window.open('', '_blank');
+            const reportContent = generateHealthReportHTML();
+            reportWindow.document.write(reportContent);
+            reportWindow.document.close();
+        }
+
+        function generateHealthReportHTML() {
+            const currentDate = new Date().toLocaleDateString();
+            const currentTime = new Date().toLocaleTimeString();
+            
+            return `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Report - COW001</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #1e40af; color: white; padding: 20px; text-align: center; }
+        .alert { background: #fee2e2; border: 1px solid #fca5a5; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .section { margin: 20px 0; }
+        .recommendation { background: #f3f4f6; padding: 10px; margin: 10px 0; border-left: 4px solid #1e40af; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AgriTech Pro - Health Assessment Report</h1>
+        <p>Generated on: ${currentDate} at ${currentTime}</p>
+    </div>
+
+    <div class="section">
+        <h2>Animal Information</h2>
+        <table>
+            <tr><th>Animal ID</th><td>COW001</td></tr>
+            <tr><th>Assessment Date</th><td>${currentDate}</td></tr>
+            <tr><th>Risk Level</th><td style="color: #dc2626; font-weight: bold;">HIGH RISK</td></tr>
+            <tr><th>Risk Probability</th><td>85.3%</td></tr>
+        </table>
+    </div>
+
+    <div class="alert">
+        <h3>⚠️ CRITICAL ALERT</h3>
+        <p><strong>Immediate veterinary attention required.</strong> High risk of acute mastitis detected.</p>
+    </div>
+
+    <div class="section">
+        <h2>Health Parameters</h2>
+        <table>
+            <tr><th>Parameter</th><th>Value</th><th>Normal Range</th><th>Status</th></tr>
+            <tr><td>Body Temperature</td><td>40.2°C</td><td>38.0-39.5°C</td><td style="color: #dc2626;">ELEVATED</td></tr>
+            <tr><td>Months After Birth</td><td>2</td><td>-</td><td style="color: #d97706;">High Risk Period</td></tr>
+            <tr><td>Previous Mastitis</td><td>Yes</td><td>No</td><td style="color: #dc2626;">RISK FACTOR</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>AI Assessment & Recommendations</h2>
+        
+        <div class="recommendation">
+            <h4>🚨 EMERGENCY ACTIONS (Next 2 Hours)</h4>
+            <ul>
+                <li>Isolate animal from herd immediately</li>
+                <li>Contact veterinarian - professional attention required</li>
+                <li>Begin cooling procedures (cold water, shade, ventilation)</li>
+                <li>Collect milk sample from affected quarters</li>
+                <li>Monitor vital signs every 30 minutes</li>
+            </ul>
+        </div>
+
+        <div class="recommendation">
+            <h4>⚠️ WARNING SIGNS - Call Vet Immediately If:</h4>
+            <ul>
+                <li>Temperature exceeds 41°C (106°F)</li>
+                <li>Animal goes down or cannot stand</li>
+                <li>Rapid or labored breathing</li>
+                <li>Bloody or dark-colored milk</li>
+                <li>Severe udder swelling or hardness</li>
+            </ul>
+        </div>
+
+        <div class="recommendation">
+            <h4>📋 TREATMENT PROTOCOL</h4>
+            <ul>
+                <li>Veterinary examination within 2 hours</li>
+                <li>Likely antibiotic therapy required</li>
+                <li>Anti-inflammatory medication</li>
+                <li>Supportive care and monitoring</li>
+                <li>Isolation until risk passes</li>
+            </ul>
+        </div>
+
+        <div class="recommendation">
+            <h4>🛡️ HERD PROTECTION MEASURES</h4>
+            <ul>
+                <li>Inspect all other animals for similar symptoms</li>
+                <li>Review and enhance milking hygiene protocols</li>
+                <li>Check environmental cleanliness</li>
+                <li>Monitor feed and water quality</li>
+                <li>Consider preventive measures for high-risk animals</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Follow-up Schedule</h2>
+        <table>
+            <tr><th>Timeframe</th><th>Action Required</th></tr>
+            <tr><td>Next 2 Hours</td><td>Veterinary consultation and emergency treatment</td></tr>
+            <tr><td>24 Hours</td><td>Re-assess condition, temperature monitoring</td></tr>
+            <tr><td>48 Hours</td><td>Treatment response evaluation</td></tr>
+            <tr><td>7 Days</td><td>Follow-up examination, milk quality check</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Emergency Contacts</h2>
+        <table>
+            <tr><th>Service</th><th>Contact</th><th>Availability</th></tr>
+            <tr><td>Dr. Patel Veterinary Clinic</td><td>+91-9876543210</td><td>24/7 Emergency</td></tr>
+            <tr><td>Gujarat Animal Hospital</td><td>+91-9123456789</td><td>Emergency: 24/7</td></tr>
+            <tr><td>Mobile Vet Service</td><td>+91-8765432109</td><td>On-site visits</td></tr>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>This report was generated by AgriTech Pro AI Health Monitoring System</p>
+        <p><strong>DISCLAIMER:</strong> This AI assessment is for guidance only. Always consult with qualified veterinary professionals for medical decisions.</p>
+        <p class="no-print">
+            <button onclick="window.print()">Print Report</button>
+            <button onclick="window.close()">Close</button>
+        </p>
+    </div>
+</body>
+</html>`;
+        }
+
+        // Initialize the system
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-show AI advisor after 3 seconds to demonstrate the flow
+            setTimeout(() => {
+                document.getElementById('aiAdvisor').style.display = 'block';
+            }, 3000);
+        });
+
+        // API Integration Helper Functions
+        class HealthAdvisorAPI {
+            constructor() {
+                this.basePrompt = `You are a specialized veterinary AI consultant for cattle health. Always provide:
+                1. Immediate risk assessment
+                2. Critical actions with timeframes
+                3. Treatment recommendations 
+                4. Emergency indicators
+                5. Preventive measures
+                
+                Keep responses practical, actionable, and prioritize animal welfare and farmer safety.`;
+            }
+
+            async getConsultation(animalData, symptoms) {
+                const prompt = `${this.basePrompt}
+                
+                CASE: ${animalData.id}
+                Current readings: Temperature ${animalData.temperature}°C, Previous mastitis: ${animalData.previousMastitis ? 'Yes' : 'No'}, 
+                Months after birth: ${animalData.monthsAfterBirth}, Risk probability: ${animalData.riskProbability}%
+                
+                Additional symptoms: "${symptoms}"
+                
+                Provide comprehensive assessment and action plan.`;
+
+                return await this.callAI(prompt);
+            }
+
+            async getEmergencyProtocol(animalData) {
+                const prompt = `${this.basePrompt}
+                
+                EMERGENCY PROTOCOL REQUEST for ${animalData.id}:
+                Critical readings: ${animalData.temperature}°C temperature, ${animalData.riskProbability}% risk probability
+                
+                Provide step-by-step emergency protocol with specific timeframes, critical warning signs, and immediate actions.`;
+
+                return await this.callAI(prompt);
+            }
+
+            async callAI(prompt) {
+                if (AI_CONFIG.provider === 'openai') {
+                    return await this.callOpenAI(prompt);
+                } else if (AI_CONFIG.provider === 'gemini') {
+                    return await this.callGemini(prompt);
+                } else {
+                    return this.getMockResponse(prompt);
+                }
+            }
+
+            async callOpenAI(prompt) {
+                const response = await fetch(AI_CONFIG.openai.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AI_CONFIG.openai.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: AI_CONFIG.openai.model,
+                        messages: [
+                            { role: 'system', content: this.basePrompt },
+                            { role: 'user', content: prompt }
+                        ],
+                        max_tokens: 1500,
+                        temperature: 0.2
+                    })
+                });
+
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+                return data.choices[0].message.content;
+            }
+
+            async callGemini(prompt) {
+                const response = await fetch(`${AI_CONFIG.gemini.endpoint}?key=${AI_CONFIG.gemini.apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: {
+                            temperature: 0.2,
+                            maxOutputTokens: 1500
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+                return data.candidates[0].content.parts[0].text;
+            }
+
+            getMockResponse(prompt) {
+                // Return appropriate mock response based on prompt content
+                if (prompt.toLowerCase().includes('emergency')) {
+                    return mockResponses.consultation.emergency;
+                }
+                return mockResponses.consultation.symptoms;
+            }
+        }
+
+        // Create global instance
+        const healthAdvisor = new HealthAdvisorAPI();
+
+        // Enhanced consultation function using the API class
+        async function consultAIEnhanced() {
+            const symptomInput = document.getElementById('symptomInput');
+            const symptoms = symptomInput.value.trim();
+            
+            if (!symptoms) {
+                alert('Please describe the symptoms first');
+                return;
+            }
+
+            const consultBtn = document.getElementById('consultBtn');
+            consultBtn.innerHTML = '<span class="loading"></span> Consulting AI...';
+            consultBtn.disabled = true;
+
+            addChatMessage(symptoms, 'user');
+            showTypingIndicator();
+
+            try {
+                const animalData = {
+                    id: 'COW001',
+                    temperature: 40.2,
+                    previousMastitis: true,
+                    monthsAfterBirth: 2,
+                    riskProbability: 85.3
+                };
+
+                const response = await healthAdvisor.getConsultation(animalData, symptoms);
+                
+                hideTypingIndicator();
+                addChatMessage(response, 'ai');
+                generateRecommendations(response);
+                
+            } catch (error) {
+                hideTypingIndicator();
+                addChatMessage('I encountered an error while processing your request. Please contact a veterinarian immediately given the high-risk nature of this case.', 'ai');
+                console.error('AI consultation error:', error);
+            }
+
+            consultBtn.innerHTML = '<i class="fas fa-comments"></i> Consult AI';
+            consultBtn.disabled = false;
+            symptomInput.value = '';
+        }
+
+        // Setup instructions comment for integration
+        /*
+        INTEGRATION INSTRUCTIONS:
+
+        1. REPLACE API KEYS:
+           - Get OpenAI API key from: https://platform.openai.com/api-keys
+           - Get Gemini API key from: https://makersuite.google.com/app/apikey
+           - Update AI_CONFIG object with your actual keys
+           - Change AI_CONFIG.provider to 'openai' or 'gemini'
+
+        2. INTEGRATE WITH YOUR EXISTING FRONTEND:
+           - Copy the consultAI() and related functions
+           - Add the health advisor HTML section to your disease detection results
+           - Include the CSS styles for proper formatting
+           - Connect with your existing disease detection form results
+
+        3. SECURITY CONSIDERATIONS:
+           - Store API keys securely (environment variables on server-side)
+           - Implement rate limiting to prevent API abuse
+           - Add user authentication if needed
+           - Consider caching common responses
+
+        4. CUSTOMIZATION:
+           - Modify prompts based on your specific veterinary knowledge
+           - Add more specific treatments for your local region
+           - Include local veterinary contacts and emergency numbers
+           - Translate to local languages (Gujarati support included)
+
+        5. TESTING:
+           - Test with various symptom combinations
+           - Validate medical advice accuracy with local vets
+           - Test error handling and fallback scenarios
+        */
+    </script>
+</body>
+</html>
