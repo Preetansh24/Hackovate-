@@ -130,10 +130,8 @@ def ultimate_showcase():
     print("   • Disease detection with risk assessment")
     print("   • Complete farm management solution")
     
-    print("\n" + "="*80)
-    print("🎉 READY TO WIN ANY HACKATHON! 🎉")
-    print("🏆 THIS IS THE MOST AMAZING UI EVER CREATED! 🏆")
-    print("="*80)
+   
 
 if __name__ == "__main__":
     ultimate_showcase()
+
